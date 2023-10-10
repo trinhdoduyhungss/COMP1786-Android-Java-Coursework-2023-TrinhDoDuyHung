@@ -42,6 +42,10 @@ public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.HikeViewHolder
         });
     }
 
+    public void setHikes(List<Hike> hikes) {
+        this.hikes = hikes;
+    }
+
     @Override
     public int getItemCount() {
         return hikes.size();

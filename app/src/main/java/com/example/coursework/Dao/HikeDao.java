@@ -25,4 +25,8 @@ public interface HikeDao {
 
     @Query("DELETE FROM details")
     void deleteAllHikes();
+
+    // Search for a hike by name or date or location
+    @Query("SELECT * FROM details WHERE name LIKE '%' || :search || '%' OR doh LIKE '%' || :search || '%' OR location LIKE '%' || :search || '%'")
+    List<Hike> searchHikes(String search);
 }
