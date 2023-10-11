@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.view.LayoutInflater;
 
+import com.example.coursework.MainActivity;
 import com.example.coursework.R;
 import com.example.coursework.Models.Hike;
 import com.example.coursework.Adapters.HikeAdapter;
@@ -88,6 +89,17 @@ public class SearchFragment extends Fragment {
         hikes = appDatabase.hikeDao().getAllHikes();
 
         adapter = new HikeAdapter(hikes);
+
+        adapter.setOnItemClickListener(new HikeAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Fragment fragment = new ObservationsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putLong("hikeId", hikes.get(position).hike_id);
+                fragment.setArguments(bundle);
+                ((MainActivity) getActivity()).replaceFragment(fragment);
+            }
+        });
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));

@@ -9,22 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.Spinner;
 
 import com.example.coursework.Database.AppDatabase;
-import com.example.coursework.Forms.HikeForm;
 import com.example.coursework.MainActivity;
-import com.example.coursework.Models.Hike;
 import com.example.coursework.R;
+import com.example.coursework.Forms.ObservationForm;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link AddFragment#newInstance} factory method to
+ * Use the {@link EditObservationsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddFragment extends Fragment {
+public class EditObservationsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,14 +28,13 @@ public class AddFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private AppDatabase appDatabase;
-
-    private final HikeForm hikeForm = new HikeForm();
+    private final ObservationForm observationForm = new ObservationForm();
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public AddFragment() {
+    public EditObservationsFragment() {
         // Required empty public constructor
     }
 
@@ -49,11 +44,11 @@ public class AddFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AddFragment.
+     * @return A new instance of fragment EditObservationsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddFragment newInstance(String param1, String param2) {
-        AddFragment fragment = new AddFragment();
+    public static EditObservationsFragment newInstance(String param1, String param2) {
+        EditObservationsFragment fragment = new EditObservationsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -74,56 +69,67 @@ public class AddFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_add, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_edit_observations, container, false);
 
         appDatabase = Room.databaseBuilder(requireContext(), AppDatabase.class, "sqlite_example_db")
                 .allowMainThreadQueries() // For simplicity, don't use this in production
                 .build();
 
-        Button saveDetailsButton = rootView.findViewById(R.id.saveHikeButton);
-        saveDetailsButton.setOnClickListener(new View.OnClickListener() {
+        observationForm.setViewForm(rootView, getArguments());
+
+        observationForm.hikeId = getArguments().getLong("hikeId");
+        observationForm.observationId = getArguments().getLong("observationId");
+
+        Button cancelButton = rootView.findViewById(R.id.cancelButton);
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(hikeForm.readySave){
+                cancel();
+            }
+        });
+
+        Button saveObservationButton = rootView.findViewById(R.id.saveObservationButton);
+
+        saveObservationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(observationForm.readySave){
                     saveDetails();
-                }else if(hikeForm.name == null){
-                    hikeForm.setForm(rootView);
+                }else if(observationForm.name == null){
+                    observationForm.setForm(rootView);
                 }
             }
         });
 
-        CheckBox hasParkingButtonYes = rootView.findViewById(R.id.parkingCheckHikeTextYes);
-        CheckBox hasParkingButtonNo = rootView.findViewById(R.id.parkingCheckHikeTextNo);
-        hasParkingButtonYes.setOnClickListener(new View.OnClickListener() {
+        Button deleteButton = rootView.findViewById(R.id.deleteButton);
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hasParkingButtonNo.setChecked(false);
-            }
-        });
-        hasParkingButtonNo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                hasParkingButtonYes.setChecked(false);
+                appDatabase.hikeDao().deleteObservation(observationForm.observationId);
+                cancel();
             }
         });
 
         return rootView;
     }
 
-    private void saveDetails() {
-        Hike hike = new Hike();
-        hike.name = hikeForm.name;
-        hike.doh = hikeForm.doh;
-        hike.Loh = hikeForm.Loh;
-        hike.difficulty = hikeForm.difficulty;
-        hike.location = hikeForm.location;
-        hike.hasParking = hikeForm.hasParking;
-        hike.description = hikeForm.description;
+    private void saveDetails(){
+        appDatabase.hikeDao().updateObservation(
+                observationForm.observationId,
+                observationForm.name,
+                observationForm.tob,
+                observationForm.description
+        );
+        cancel();
+    }
 
-        appDatabase.hikeDao().insertHike(hike);
-
-        // Select the home fragment at bottom navigation
-        ((MainActivity) getActivity()).selectHomeFragment();
-
+    private void cancel(){
+        Fragment fragment = new ObservationsFragment();
+        Bundle args = new Bundle();
+        args.putLong("hikeId", getArguments().getLong("hikeId"));
+        fragment.setArguments(args);
+        ((MainActivity) getActivity()).replaceFragment(fragment);
     }
 }

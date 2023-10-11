@@ -1,8 +1,10 @@
 package com.example.coursework.Models;
+import java.util.List;
+
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "details")
+@Entity(tableName = "hikes")
 public class Hike {
     @PrimaryKey(autoGenerate = true)
     public long hike_id;

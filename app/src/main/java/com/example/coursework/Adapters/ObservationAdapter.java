@@ -1,4 +1,5 @@
 package com.example.coursework.Adapters;
+
 import java.util.List;
 
 import android.view.View;
@@ -10,28 +11,28 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.coursework.R;
-import com.example.coursework.Models.Hike;
+import com.example.coursework.Models.Observation;
 
-public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.HikeViewHolder> {
-    private List<Hike> hikes;
+public class ObservationAdapter extends RecyclerView.Adapter<ObservationAdapter.ObservationViewHolder>{
+    private List<Observation> observations;
     private OnItemClickListener listener;
 
-    public HikeAdapter(List<Hike> hikes) {
-        this.hikes = hikes;
+    public ObservationAdapter(List<Observation> observations) {
+        this.observations = observations;
     }
 
     @NonNull
     @Override
-    public HikeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ObservationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_hike_card, parent, false);
-        return new HikeViewHolder(view);
+        return new ObservationViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HikeViewHolder holder, int position) {
-        Hike hike = hikes.get(position);
-        holder.hikeName.setText(hike.name);
-        holder.hikeDetails.setText(hike.doh);
+    public void onBindViewHolder(@NonNull ObservationViewHolder holder, int position) {
+        Observation observation = observations.get(position);
+        holder.hikeName.setText(observation.name);
+        holder.hikeDetails.setText(observation.tob);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,19 +44,19 @@ public class HikeAdapter extends RecyclerView.Adapter<HikeAdapter.HikeViewHolder
         });
     }
 
-    public void setHikes(List<Hike> hikes) {
-        this.hikes = hikes;
+    public void setObservations(List<Observation> observations) {
+        this.observations = observations;
     }
 
     @Override
     public int getItemCount() {
-        return hikes.size();
+        return observations.size();
     }
 
-    public static class HikeViewHolder extends RecyclerView.ViewHolder {
+    public static class ObservationViewHolder extends RecyclerView.ViewHolder {
         TextView hikeName, hikeDetails;
 
-        public HikeViewHolder(@NonNull View itemView) {
+        public ObservationViewHolder(@NonNull View itemView) {
             super(itemView);
             hikeName = itemView.findViewById(R.id.hikeName);
             hikeDetails = itemView.findViewById(R.id.hikeDetails);
