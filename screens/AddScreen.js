@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from "react";
 import {
     Alert,
-    StyleSheet,
+    Pressable,
     Text,
     TextInput,
     TouchableOpacity,
     View,
 } from "react-native";
+import DateTimePicker from '@react-native-community/datetimepicker';
 import RadioGroup from 'react-native-radio-buttons-group';
 import DropDownPicker from 'react-native-dropdown-picker';
 import Database from "../Database/Database";
@@ -20,6 +21,8 @@ const AddScreen = ({ navigation }) => {
     const [loh, setLoh] = useState("");
     const [difficulty, setDifficulty] = useState("");
     const [description, setDescription] = useState("");
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [date, setDate] = useState(new Date(1697342161000));
 
     const radioButtons = useMemo(() => ([
         {
@@ -50,6 +53,18 @@ const AddScreen = ({ navigation }) => {
         navigation.goBack();
     };
 
+    const onChangeDate = (event, selectedDate) => {
+        const currentDate = selectedDate;
+        setShowDatePicker(false);
+        setDate(currentDate);
+        let dateString = currentDate.getDate() + "/" + (currentDate.getMonth() + 1) + "/" + currentDate.getFullYear();
+        setDoh(dateString);
+    };
+
+    const showDatepicker = () => {
+        setShowDatePicker(true);
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.labelContainer}>
@@ -77,13 +92,24 @@ const AddScreen = ({ navigation }) => {
                 <Text style={styles.label}>Date of the hike:</Text>
                 <Text style={styles.required}>*</Text>
             </View>
-            <TextInput
-                style={styles.input}
-                value={doh}
-                onChangeText={setDoh}
-                placeholder="20/11/2023"
-                multiline
-            />
+            <Pressable onPress={showDatepicker}>
+                <TextInput
+                    style={styles.input}
+                    value={doh}
+                    placeholder="20/11/2023"
+                    editable={false}
+                    multiline
+                />
+            </Pressable>
+            {showDatePicker && (
+                <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode={'date'}
+                    is24Hour={true}
+                    onChange={onChangeDate}
+                />
+            )}
             <View style={styles.labelContainer}>
                 <Text style={styles.label}>Parking available :</Text>
                 <Text style={styles.required}>*</Text>
