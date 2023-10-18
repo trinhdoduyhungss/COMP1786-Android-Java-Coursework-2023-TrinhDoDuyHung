@@ -1,5 +1,4 @@
 package com.example.coursework.Models;
-import java.util.List;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

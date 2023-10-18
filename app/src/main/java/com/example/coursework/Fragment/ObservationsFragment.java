@@ -12,11 +12,12 @@ import android.widget.Button;
 import android.view.ViewGroup;
 import android.view.LayoutInflater;
 
-import com.example.coursework.MainActivity;
 import com.example.coursework.R;
+import com.example.coursework.MainActivity;
 import com.example.coursework.Models.Observation;
 import com.example.coursework.Database.AppDatabase;
 import com.example.coursework.Adapters.ObservationAdapter;
+
 
 /**
  * A simple {@link Fragment} subclass.

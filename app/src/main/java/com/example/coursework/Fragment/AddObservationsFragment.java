@@ -1,18 +1,21 @@
 package com.example.coursework.Fragment;
 
+import java.util.Date;
+import java.util.Calendar;
+
 import android.os.Bundle;
 
 import androidx.room.Room;
 import androidx.fragment.app.Fragment;
 
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.LayoutInflater;
 import android.widget.Button;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.view.LayoutInflater;
 
-import com.example.coursework.MainActivity;
-import com.example.coursework.Models.Observation;
 import com.example.coursework.R;
+import com.example.coursework.MainActivity;
 import com.example.coursework.Database.AppDatabase;
 import com.example.coursework.Forms.ObservationForm;
 
@@ -79,6 +82,11 @@ public class AddObservationsFragment extends Fragment {
 
         Button saveObservationButton = rootView.findViewById(R.id.saveObservationButton);
         Button cancelButton = rootView.findViewById(R.id.cancelButton);
+
+        EditText tobObservationText = rootView.findViewById(R.id.tobObservationText);
+        Date currentTime = Calendar.getInstance().getTime();
+        tobObservationText.setText(currentTime.toString());
+        tobObservationText.setKeyListener(null);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override

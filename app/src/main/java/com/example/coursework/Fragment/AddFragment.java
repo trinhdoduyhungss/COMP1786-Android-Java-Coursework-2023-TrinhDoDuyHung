@@ -1,30 +1,29 @@
 package com.example.coursework.Fragment;
 
-import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
 import androidx.room.Room;
+import androidx.fragment.app.Fragment;
 
-import android.view.LayoutInflater;
+import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.view.LayoutInflater;
 
-import com.example.coursework.Database.AppDatabase;
-import com.example.coursework.Forms.HikeForm;
-import com.example.coursework.MainActivity;
-import com.example.coursework.Models.Hike;
 import com.example.coursework.R;
+import com.example.coursework.Models.Hike;
+import com.example.coursework.MainActivity;
+import com.example.coursework.Forms.HikeForm;
+import com.example.coursework.Database.AppDatabase;
+import com.example.coursework.Interfaces.DateSetHandle;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link AddFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddFragment extends Fragment {
+public class AddFragment extends Fragment implements DateSetHandle {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,6 +33,8 @@ public class AddFragment extends Fragment {
     private AppDatabase appDatabase;
 
     private final HikeForm hikeForm = new HikeForm();
+
+    private EditText dohHikeText;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -71,10 +72,26 @@ public class AddFragment extends Fragment {
     }
 
     @Override
+    public void onDateSet(String date) {
+        dohHikeText.setText(date);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_add, container, false);
+
+        dohHikeText = rootView.findViewById(R.id.dohHikeText);
+        dohHikeText.setKeyListener(null);
+        dohHikeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerFragment datePickerFragment = new DatePickerFragment();
+                datePickerFragment.setTargetFragment(AddFragment.this, 0);
+                datePickerFragment.show(getFragmentManager(), "datePicker");
+            }
+        });
 
         appDatabase = Room.databaseBuilder(requireContext(), AppDatabase.class, "sqlite_example_db")
                 .allowMainThreadQueries() // For simplicity, don't use this in production
