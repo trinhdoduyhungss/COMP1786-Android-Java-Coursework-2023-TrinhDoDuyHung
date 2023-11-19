@@ -44,13 +44,41 @@ const AddScreen = ({ navigation }) => {
         { label: 'MEDIUM', value: 'MEDIUM' },
     ]);
 
+    const convertBinary2Boolean = (binary) => {
+        if (binary == "1") {
+            return "True";
+        }
+        return "False";
+    }
+
     const handleAddHike = async () => {
         if (!name || !location || !doh || !hasParking || !loh || !difficulty) {
-            Alert.alert("Error", "Please enter title and description");
+            Alert.alert("Error", "Please enter all required fields!");
             return;
         }
-        await Database.addHike(name, doh, location, hasParking, loh, difficulty, description);
-        navigation.goBack();
+        let full_information = ""
+        full_information = full_information + "Name: " + name + "\n"
+        full_information = full_information + "Location: " + location + "\n"
+        full_information = full_information + "Date of hike: " + doh + "\n"
+        full_information = full_information + "Parking available: " + convertBinary2Boolean(hasParking) + "\n"
+        full_information = full_information + "Length of hike: " + loh + "\n"
+        full_information = full_information + "Difficulty level: " + difficulty + "\n"
+        full_information = full_information + "Description: " + description + "\n"
+        Alert.alert(
+            "Confirmation",
+            "Are you sure you want to add this hike?\n"+full_information,
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: "OK", onPress: async () => {
+                    await Database.addHike(name, doh, location, hasParking, loh, difficulty, description);
+                    navigation.goBack();
+                } }
+            ]
+        );
     };
 
     const onChangeDate = (event, selectedDate) => {
@@ -129,6 +157,7 @@ const AddScreen = ({ navigation }) => {
                     onChangeText={setLoh}
                     placeholder="100"
                     multiline={false}
+                    keyboardType="numeric"
                 />
             </View>
             <View style={styles.labelContainer}>
